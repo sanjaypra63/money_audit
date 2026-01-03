@@ -3,31 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Statement Analyzer</title>
+    <title>Money Audit - Analyze Your Bank Statements</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { margin-bottom: 20px; }
-        .result { margin-top: 20px; }
-        .insight { font-weight: bold; color: red; }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .welcome { text-align: center; margin-bottom: 30px; }
+        form { text-align: center; margin-bottom: 20px; }
+        input[type="file"] { margin: 10px 0; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .insight { font-weight: bold; color: #d9534f; text-align: center; margin: 20px 0; }
+        .download { text-align: center; margin-top: 20px; }
+        .privacy { font-size: 0.9em; color: #666; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>Bank Statement Analyzer</h1>
-    <form action="/analyze" method="post" enctype="multipart/form-data">
-        <label for="file">Upload PDF Bank Statement:</label>
-        <input type="file" name="file" accept=".pdf" required>
-        <button type="submit">Analyze</button>
-    </form>
-    {% if result %}
-    <div class="result">
+    <div class="container">
+        <h1>Money Audit</h1>
+        <div class="welcome">
+            <p><strong>Welcome to Money Audit – the easiest way to analyze your bank statements.</strong></p>
+            <p>Upload your bank statement PDFs and instantly see where your money is going. Identify large expenses, small daily spends, and total in/out to make smarter financial decisions.</p>
+        </div>
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+            <label for="file">Upload PDF Bank Statement:</label><br>
+            <input type="file" name="file" accept=".pdf" required><br>
+            <button type="submit">Analyze Statement</button>
+        </form>
+        {% if result %}
         <h2>Analysis Results</h2>
-        <p><strong>Total Money In:</strong> {{ result.total_in }}</p>
-        <p><strong>Total Money Out:</strong> {{ result.total_out }}</p>
-        <p><strong>Large Expenses:</strong> {{ result.large_expenses }}</p>
-        <p><strong>Small Daily Spends:</strong> {{ result.small_spends }}</p>
-        <p class="insight"><strong>Insight:</strong> {{ result.insight }}</p>
-        <p><em>Your file is deleted after processing.</em></p>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td>Total Money In</td><td>{{ result.total_in }}</td></tr>
+            <tr><td>Total Money Out</td><td>{{ result.total_out }}</td></tr>
+            <tr><td>Large Expenses (count)</td><td>{{ result.large_expenses_count }}</td></tr>
+            <tr><td>Large Expenses (sum)</td><td>{{ result.large_expenses_sum }}</td></tr>
+            <tr><td>Small Daily Spends (count)</td><td>{{ result.small_spends_count }}</td></tr>
+            <tr><td>Small Daily Spends (sum)</td><td>{{ result.small_spends_sum }}</td></tr>
+        </table>
+        <div class="insight">
+            <strong>Insight:</strong> {{ result.insight }}
+        </div>
+        <div class="download">
+            <a href="/download_csv" download="analysis_results.csv"><button>Download Results as CSV</button></a>
+        </div>
+        <div class="privacy">
+            <em>Your file is deleted after processing for privacy.</em>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 </body>
 </html>
