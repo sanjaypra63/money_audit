@@ -23,19 +23,28 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def parse_transactions(text):
-    # Regex to find amounts with currency symbols, requiring currency symbol
-    # Matches like ₹100.00, -₹50.00, €500.00, $-10.00
-    amount_pattern = r'(-?[₹€£$]\d+\.?\d*)'
-    matches = re.findall(amount_pattern, text)
+    # Regex for Debit and Credit lines, handling commas in amounts
+    debit_pattern = r'Debit\s*([₹€£$¥][\d,]+\.?\d*)'
+    credit_pattern = r'Credit\s*([₹€£$¥][\d,]+\.?\d*)'
+    debits = re.findall(debit_pattern, text)
+    credits = re.findall(credit_pattern, text)
     transactions = []
     currency = None
-    for match in matches:
-        # Extract sign, currency, amount
-        sign = -1 if match.startswith('-') else 1
-        curr = match.lstrip('-')[0]
-        amt_str = match.lstrip('-')[1:]
+    for d in debits:
+        curr = d[0]
+        amt_str = d[1:].replace(',', '')  # Remove commas
         try:
-            amt = float(amt_str) * sign
+            amt = float(amt_str) * -1  # Debit is expense, negative
+            transactions.append(amt)
+            if not currency:
+                currency = curr
+        except ValueError:
+            continue
+    for c in credits:
+        curr = c[0]
+        amt_str = c[1:].replace(',', '')  # Remove commas
+        try:
+            amt = float(amt_str)  # Credit is income, positive
             transactions.append(amt)
             if not currency:
                 currency = curr
@@ -48,8 +57,8 @@ def analyze_transactions(transactions):
     debits = [t for t in transactions if t < 0]
     total_in = sum(credits)
     total_out = sum(debits) * -1  # Make positive
-    large_expenses = [abs(d) for d in debits if abs(d) > 500]
-    small_spends = [abs(d) for d in debits if abs(d) <= 500]
+    large_expenses = [abs(d) for d in debits if abs(d) > 100]
+    small_spends = [abs(d) for d in debits if abs(d) <= 100]
     large_expenses_count = len(large_expenses)
     large_expenses_sum = sum(large_expenses)
     small_spends_count = len(small_spends)
