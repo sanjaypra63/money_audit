@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Statement Analyzer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin-bottom: 20px; }
+        .result { margin-top: 20px; }
+        .insight { font-weight: bold; color: red; }
+    </style>
+</head>
+<body>
+    <h1>Bank Statement Analyzer</h1>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <label for="file">Upload PDF Bank Statement:</label>
+        <input type="file" name="file" accept=".pdf" required>
+        <button type="submit">Analyze</button>
+    </form>
+    {% if result %}
+    <div class="result">
+        <h2>Analysis Results</h2>
+        <p><strong>Total Money In:</strong> {{ result.total_in }}</p>
+        <p><strong>Total Money Out:</strong> {{ result.total_out }}</p>
+        <p><strong>Large Expenses:</strong> {{ result.large_expenses }}</p>
+        <p><strong>Small Daily Spends:</strong> {{ result.small_spends }}</p>
+        <p class="insight"><strong>Insight:</strong> {{ result.insight }}</p>
+        <p><em>Your file is deleted after processing.</em></p>
+    </div>
+    {% endif %}
+</body>
+</html>
