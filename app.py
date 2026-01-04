@@ -23,47 +23,46 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def parse_transactions(text):
-    # Regex for Debit and Credit lines, handling commas in amounts
-    debit_pattern = r'Debit\s*([₹€£$¥][\d,]+\.?\d*)'
-    credit_pattern = r'Credit\s*([₹€£$¥][\d,]+\.?\d*)'
-    debits = re.findall(debit_pattern, text)
-    credits = re.findall(credit_pattern, text)
+    # Detect currency symbol (first occurrence)
+    currency_match = re.search(r'[₹€£$¥]', text)
+    currency = currency_match.group(0) if currency_match else ''
+
+    # Extract all monetary values like $1,234.56
+    amounts = re.findall(r'[₹€£$¥]\s*[\d,]+\.?\d*', text)
+
     transactions = []
-    currency = None
-    for d in debits:
-        curr = d[0]
-        amt_str = d[1:].replace(',', '')  # Remove commas
+
+    for amt in amounts:
+        clean = amt.replace(currency, '').replace(',', '').strip()
         try:
-            amt = float(amt_str) * -1  # Debit is expense, negative
-            transactions.append(amt)
-            if not currency:
-                currency = curr
-        except ValueError:
+            value = float(clean)
+            transactions.append(value)
+        except:
             continue
-    for c in credits:
-        curr = c[0]
-        amt_str = c[1:].replace(',', '')  # Remove commas
-        try:
-            amt = float(amt_str)  # Credit is income, positive
-            transactions.append(amt)
-            if not currency:
-                currency = curr
-        except ValueError:
-            continue
+
     return transactions, currency
 
 def analyze_transactions(transactions):
-    credits = [t for t in transactions if t > 0]
-    debits = [t for t in transactions if t < 0]
-    total_in = sum(credits)
-    total_out = sum(debits) * -1  # Make positive
-    large_expenses = [abs(d) for d in debits if abs(d) > 100]
-    small_spends = [abs(d) for d in debits if abs(d) <= 100]
-    large_expenses_count = len(large_expenses)
-    large_expenses_sum = sum(large_expenses)
-    small_spends_count = len(small_spends)
-    small_spends_sum = sum(small_spends)
-    return total_in, total_out, large_expenses_count, large_expenses_sum, small_spends_count, small_spends_sum
+    if not transactions:
+        return 0, 0, 0, 0, 0, 0
+
+    # Assume: largest numbers are income, smaller are expenses
+    total_in = max(transactions)
+    expenses = [t for t in transactions if t != total_in]
+
+    total_out = sum(expenses)
+
+    large_expenses = [t for t in expenses if t > 100]
+    small_spends = [t for t in expenses if t <= 100]
+
+    return (
+        total_in,
+        total_out,
+        len(large_expenses),
+        sum(large_expenses),
+        len(small_spends),
+        sum(small_spends)
+    )
 
 def get_insight(total_out, large_expenses_count):
     if total_out == 0:
