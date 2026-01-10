@@ -1,73 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K0GCTQ3WFG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-K0GCTQ3WFG');
-</script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Money Audit - Analyze Your Bank Statements</title>
+    <title>Money Audit – Understand Your Spending</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K0GCTQ3WFG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-K0GCTQ3WFG');
+    </script>
+
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; }
-        .welcome { text-align: center; margin-bottom: 30px; }
-        form { text-align: center; margin-bottom: 20px; }
-        input[type="file"] { margin: 10px 0; }
-        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .insight { font-weight: bold; color: #d9534f; text-align: center; margin: 20px 0; }
-        .download { text-align: center; margin-top: 20px; }
-        .privacy { font-size: 0.9em; color: #666; text-align: center; margin-top: 20px; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: #222;
+        }
+        h2 {
+            font-weight: normal;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .trust {
+            font-size: 13px;
+            color: #444;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .trust li {
+            margin-bottom: 8px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            margin: 15px 0;
+        }
+        button {
+            background: #2d6cdf;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover {
+            background: #1f54b7;
+        }
+        .results {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .results h3 {
+            margin-bottom: 10px;
+        }
+        .result-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .insight {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f4ff;
+            border-left: 4px solid #2d6cdf;
+            font-size: 14px;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+        }
     </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K0GCTQ3WFG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-K0GCTQ3WFG');
-</script>
+</head>
 <body>
+
     <div class="container">
         <h1>Money Audit</h1>
-        <div class="welcome">
-            <p><strong>Welcome to Money Audit – the easiest way to analyze your bank statements.</strong></p>
-            <p>Upload your bank statement PDFs and instantly see where your money is going. Identify large expenses, small daily spends, and total in/out to make smarter financial decisions.</p>
-        </div>
+        <h2>Understand where your money really goes — in minutes.</h2>
+
+        <p>
+            Upload your bank statement PDF and instantly analyze your income and spending.
+            Money Audit breaks down total money in, total money out, large expenses, and small daily spends —
+            without storing your data.
+        </p>
+
+        <ul class="trust">
+            <li>✔ No login required</li>
+            <li>✔ Files are deleted immediately after analysis</li>
+            <li>✔ Works with bank statements from any country</li>
+            <li>✔ Currency detected automatically</li>
+        </ul>
+
         <form action="/analyze" method="post" enctype="multipart/form-data">
-            <label for="file">Upload PDF Bank Statement:</label><br>
-            <input type="file" name="file" accept=".pdf" required><br>
-            <button type="submit">Analyze Statement</button>
+            <input type="file" name="file" accept="application/pdf" required>
+            <br>
+            <button type="submit">Upload PDF & Analyze</button>
         </form>
+
         {% if result %}
-        <h2>Analysis Results</h2>
-        <table>
-            <tr><th>Metric</th><th>Value</th></tr>
-            <tr><td>Total Money In</td><td>{{ result.total_in }}</td></tr>
-            <tr><td>Total Money Out</td><td>{{ result.total_out }}</td></tr>
-            <tr><td>Large Expenses (count)</td><td>{{ result.large_expenses_count }}</td></tr>
-            <tr><td>Large Expenses (sum)</td><td>{{ result.large_expenses_sum }}</td></tr>
-            <tr><td>Small Daily Spends (count)</td><td>{{ result.small_spends_count }}</td></tr>
-            <tr><td>Small Daily Spends (sum)</td><td>{{ result.small_spends_sum }}</td></tr>
-        </table>
-        <div class="insight">
-            <strong>Insight:</strong> {{ result.insight }}
-        </div>
-        <div class="download">
-            <a href="/download_csv" download="analysis_results.csv"><button>Download Results as CSV</button></a>
-        </div>
-        <div class="privacy">
-            <em>Your file is deleted after processing for privacy.</em>
+        <div class="results">
+            <h3>Analysis Result</h3>
+            <div class="result-item"><strong>Total Money In:</strong> {{ result.total_in }}</div>
+            <div class="result-item"><strong>Total Money Out:</strong> {{ result.total_out }}</div>
+            <div class="result-item"><strong>Large Expenses:</strong> {{ result.large_expenses_count }} ({{ result.large_expenses_sum }})</div>
+            <div class="result-item"><strong>Small Daily Spends:</strong> {{ result.small_spends_count }} ({{ result.small_spends_sum }})</div>
+            <div class="insight">{{ result.insight }}</div>
         </div>
         {% endif %}
+
+        <footer>
+            🔒 We use anonymous analytics to improve the product. No bank statements or personal data are stored.
+        </footer>
     </div>
+
 </body>
 </html>
